@@ -1,0 +1,51 @@
+#!/bin/bash -ex
+
+#Update yum
+
+yum -y update
+
+#Add node's source repo
+
+curl -sL https://rpm.nodesource.com/setup_15.x| bash -
+
+#Install nodejs
+
+yum -y install nodejs
+
+#Create a dedicated directory for the application
+
+mkdir -p /var/app
+
+#Get the app from S3
+
+wget https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/ILT-TF-100-TECESS-5/app/app.zip
+
+#Unzip it into the specific folder
+
+unzip app.zip -d /var/app/
+
+#Set default AWS Region
+export DEFAULT_AWS_REGION=<AWS_REGION>
+
+#Set S3 bucket
+
+export PHOTOS_BUCKET=<BUCKET_NAME>
+
+#Download service file
+
+curl -LO https://raw.githubusercontent.com/marcioscunha/aws_labs/main/EmployeesApp/employee.service
+mv employee.service /etc/systemd/system/
+
+
+#Install dependencies
+
+cd /var/app/
+
+npm install
+
+#Configure and start your app
+
+systemctl daemon-reload
+systemctl enable employee
+
+npm start

@@ -1,0 +1,15 @@
+[Unit]
+Description=My App
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/app
+ExecStart=/usr/bin/npm start
+Restart=always
+User=root
+Environment=DEFAULT_AWS_REGION=<AWS_REGION>
+Environment=PHOTOS_BUCKET=<BUCKET_NAME>
+
+[Install]
+WantedBy=multi-user.target
